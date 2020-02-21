@@ -1,0 +1,1026 @@
+USE [MakeMyTripDb]
+GO
+/****** Object:  Table [dbo].[FlightDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FlightDetails](
+	[FlightDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[FlightId] [int] NOT NULL,
+	[FlightDetails] [varchar](50) NOT NULL,
+	[Origin] [varchar](50) NOT NULL,
+	[Destination] [varchar](50) NOT NULL,
+	[Amount] [money] NOT NULL,
+	[ReviewId] [int] NOT NULL,
+ CONSTRAINT [PK_FlightDetails] PRIMARY KEY CLUSTERED 
+(
+	[FlightDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ApplicationObjectTypes]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ApplicationObjectTypes](
+	[ApplicationObjectTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationObjectId] [int] NOT NULL,
+	[ApplicationObjectTypeName] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_ApplicationObjectTypes] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationObjectTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Flights]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Flights](
+	[FlightId] [int] IDENTITY(1,1) NOT NULL,
+	[FlightName] [varchar](50) NOT NULL,
+	[ApplicationObjectId] [int] NOT NULL,
+ CONSTRAINT [PK_Flights] PRIMARY KEY CLUSTERED 
+(
+	[FlightId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[FlightAvailabilityDays]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FlightAvailabilityDays](
+	[FlightAvailableId] [int] IDENTITY(1,1) NOT NULL,
+	[AvailableDay] [varchar](50) NOT NULL,
+	[FlightDetailId] [int] NOT NULL,
+ CONSTRAINT [PK_FlightAvailabilityDays] PRIMARY KEY CLUSTERED 
+(
+	[FlightAvailableId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vFlightDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[vFlightDetails]
+AS
+SELECT        dbo.FlightDetails.Origin, dbo.FlightDetails.Destination, dbo.FlightDetails.FlightDetails, dbo.FlightAvailabilityDays.AvailableDay, dbo.Flights.FlightName, dbo.FlightDetails.Amount, 
+                         dbo.ApplicationObjectTypes.ApplicationObjectTypeId, dbo.ApplicationObjectTypes.ApplicationObjectTypeName
+FROM            dbo.FlightDetails INNER JOIN
+                         dbo.FlightAvailabilityDays ON dbo.FlightDetails.FlightDetailId = dbo.FlightAvailabilityDays.FlightDetailId INNER JOIN
+                         dbo.Flights ON dbo.FlightDetails.FlightId = dbo.Flights.FlightId CROSS JOIN
+                         dbo.ApplicationObjectTypes
+GO
+/****** Object:  Table [dbo].[BusDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusDetails](
+	[BusDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[BusId] [int] NOT NULL,
+	[BusDetails] [varchar](50) NOT NULL,
+	[Origin] [varchar](50) NOT NULL,
+	[Destination] [varchar](50) NOT NULL,
+	[Date] [datetimeoffset](7) NOT NULL,
+	[LeftSeats] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+	[ReviewId] [int] NOT NULL,
+ CONSTRAINT [PK_BusDetails] PRIMARY KEY CLUSTERED 
+(
+	[BusDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Buses]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Buses](
+	[BusId] [int] IDENTITY(1,1) NOT NULL,
+	[BusName] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Buses] PRIMARY KEY CLUSTERED 
+(
+	[BusId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BusAvailabilityDays]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusAvailabilityDays](
+	[BusAvailableId] [int] IDENTITY(1,1) NOT NULL,
+	[AvailableDay] [varchar](50) NOT NULL,
+	[BusDetailId] [int] NOT NULL,
+ CONSTRAINT [PK_BusAvailabilityDays] PRIMARY KEY CLUSTERED 
+(
+	[BusAvailableId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vBusDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[vBusDetails]
+AS
+SELECT        dbo.BusAvailabilityDays.AvailableDay, dbo.BusDetails.BusDetails, dbo.BusDetails.Origin, dbo.BusDetails.Destination, dbo.BusDetails.LeftSeats, dbo.BusDetails.Amount, dbo.Buses.BusName
+FROM            dbo.BusAvailabilityDays INNER JOIN
+                         dbo.BusDetails ON dbo.BusAvailabilityDays.BusDetailId = dbo.BusDetails.BusDetailId INNER JOIN
+                         dbo.Buses ON dbo.BusDetails.BusId = dbo.Buses.BusId
+GO
+/****** Object:  Table [dbo].[TrainDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TrainDetails](
+	[TrainDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[TrainId] [int] NOT NULL,
+	[TrainDetails] [varchar](50) NOT NULL,
+	[Class] [varchar](50) NOT NULL,
+	[Origin] [varchar](50) NOT NULL,
+	[Destination] [varchar](50) NOT NULL,
+	[Date] [datetimeoffset](7) NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_TrainDetails] PRIMARY KEY CLUSTERED 
+(
+	[TrainDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TrainAvailabilityDays]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TrainAvailabilityDays](
+	[TrainAvailableId] [int] IDENTITY(1,1) NOT NULL,
+	[AvailableDay] [varchar](50) NOT NULL,
+	[TrainDetailId] [int] NOT NULL,
+ CONSTRAINT [PK_TrainAvailabilityDays] PRIMARY KEY CLUSTERED 
+(
+	[TrainAvailableId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Trains]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Trains](
+	[TrainId] [int] IDENTITY(1,1) NOT NULL,
+	[TrainName] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Trains] PRIMARY KEY CLUSTERED 
+(
+	[TrainId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vTrainDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[vTrainDetails]
+AS
+SELECT        dbo.TrainAvailabilityDays.AvailableDay, dbo.TrainDetails.TrainDetails, dbo.TrainDetails.Class, dbo.TrainDetails.Origin, dbo.TrainDetails.Destination, dbo.TrainDetails.Amount, dbo.Trains.TrainName
+FROM            dbo.TrainAvailabilityDays INNER JOIN
+                         dbo.TrainDetails ON dbo.TrainAvailabilityDays.TrainDetailId = dbo.TrainDetails.TrainDetailId INNER JOIN
+                         dbo.Trains ON dbo.TrainDetails.TrainId = dbo.Trains.TrainId
+GO
+/****** Object:  Table [dbo].[ApplicationObjects]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ApplicationObjects](
+	[ApplicationObjectId] [int] IDENTITY(1,1) NOT NULL,
+	[ApplicationObjectName] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_ApplicationObjects] PRIMARY KEY CLUSTERED 
+(
+	[ApplicationObjectId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BusBookings]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusBookings](
+	[BusBookingId] [int] IDENTITY(1,1) NOT NULL,
+	[TravellerId] [int] NOT NULL,
+	[BusDetailId] [int] NOT NULL,
+	[OfferId] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_BusBookings] PRIMARY KEY CLUSTERED 
+(
+	[BusBookingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CabBookings]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CabBookings](
+	[CabBookingId] [int] IDENTITY(1,1) NOT NULL,
+	[TravellerId] [int] NOT NULL,
+	[CabDetailId] [int] NOT NULL,
+	[OfferId] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_CabBookings] PRIMARY KEY CLUSTERED 
+(
+	[CabBookingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CabDetails]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CabDetails](
+	[CabDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[CabId] [int] NOT NULL,
+	[CabDetails] [varchar](50) NOT NULL,
+	[Facilities] [varchar](50) NOT NULL,
+	[Amount] [money] NOT NULL,
+	[ReviewId] [int] NOT NULL,
+ CONSTRAINT [PK_CabDetails] PRIMARY KEY CLUSTERED 
+(
+	[CabDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Cabs]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Cabs](
+	[CabId] [int] NOT NULL,
+	[CabName] [varchar](50) NOT NULL,
+	[Cabs] [int] NOT NULL,
+	[ApplicationObjectId] [int] NOT NULL,
+ CONSTRAINT [PK_Cabs] PRIMARY KEY CLUSTERED 
+(
+	[CabId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Cities]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Cities](
+	[CityId] [int] IDENTITY(1,1) NOT NULL,
+	[CityName] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Cities] PRIMARY KEY CLUSTERED 
+(
+	[CityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[FlightBookings]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FlightBookings](
+	[FlightBookingId] [int] IDENTITY(1,1) NOT NULL,
+	[TravellerId] [int] NOT NULL,
+	[FlightDetailId] [int] NOT NULL,
+	[OfferId] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_FlightBookings] PRIMARY KEY CLUSTERED 
+(
+	[FlightBookingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[HotelBookings]    Script Date: 21-02-2020 20:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[HotelBookings](
+	[HotelBookingId] [int] IDENTITY(1,1) NOT NULL,
+	[TravellerId] [int] NOT NULL,
+	[HotelDetailId] [int] NOT NULL,
+	[OfferId] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_HotelBookings] PRIMARY KEY CLUSTERED 
+(
+	[HotelBookingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[HotelDetails]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[HotelDetails](
+	[HotelDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[HotelId] [int] NOT NULL,
+	[HotelDetails] [varchar](50) NOT NULL,
+	[Floors] [varchar](50) NOT NULL,
+	[ReviewId] [int] NOT NULL,
+ CONSTRAINT [PK_HotelDetails] PRIMARY KEY CLUSTERED 
+(
+	[HotelDetailId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Hotels]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Hotels](
+	[HotelId] [int] IDENTITY(1,1) NOT NULL,
+	[HotelName] [varchar](50) NOT NULL,
+	[CityId] [int] NOT NULL,
+	[ApplicationObjectId] [int] NOT NULL,
+ CONSTRAINT [PK_Hotels] PRIMARY KEY CLUSTERED 
+(
+	[HotelId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Localities]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Localities](
+	[LocalityId] [int] IDENTITY(1,1) NOT NULL,
+	[LocalityName] [varchar](50) NOT NULL,
+	[HotelId] [int] NOT NULL,
+	[CityId] [int] NOT NULL,
+ CONSTRAINT [PK_Localities] PRIMARY KEY CLUSTERED 
+(
+	[LocalityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Offers]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Offers](
+	[OfferId] [int] IDENTITY(1,1) NOT NULL,
+	[OfferName] [varchar](50) NOT NULL,
+	[Discount] [money] NOT NULL,
+ CONSTRAINT [PK_Offers] PRIMARY KEY CLUSTERED 
+(
+	[OfferId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Reviews]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Reviews](
+	[UserId] [int] NOT NULL,
+	[ReviewId] [int] NOT NULL,
+	[ReviewDetails] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Reviews] PRIMARY KEY CLUSTERED 
+(
+	[ReviewId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Rooms]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Rooms](
+	[RoomId] [int] IDENTITY(1,1) NOT NULL,
+	[HotelDetailId] [int] NOT NULL,
+	[RoomType] [varchar](50) NOT NULL,
+	[Amount] [money] NOT NULL,
+	[CheckIn] [datetimeoffset](7) NOT NULL,
+	[CheckOut] [datetimeoffset](7) NOT NULL,
+ CONSTRAINT [PK_Rooms] PRIMARY KEY CLUSTERED 
+(
+	[RoomId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TrainBookings]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TrainBookings](
+	[TrainBookingId] [int] IDENTITY(1,1) NOT NULL,
+	[TravellerId] [int] NOT NULL,
+	[TrainDetailId] [int] NOT NULL,
+	[OfferId] [int] NOT NULL,
+	[Amount] [money] NOT NULL,
+ CONSTRAINT [PK_TrainBookings] PRIMARY KEY CLUSTERED 
+(
+	[TrainBookingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Travellers]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Travellers](
+	[TravellerId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[FirstName] [varchar](50) NOT NULL,
+	[LastName] [varchar](50) NOT NULL,
+	[EmailId] [varchar](50) NOT NULL,
+	[MobileNumber] [numeric](12, 0) NOT NULL,
+ CONSTRAINT [PK_Travellers] PRIMARY KEY CLUSTERED 
+(
+	[TravellerId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 21-02-2020 20:03:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[UserId] [int] IDENTITY(1,1) NOT NULL,
+	[EmailId] [varchar](50) NOT NULL,
+	[MobileNumber] [numeric](12, 0) NOT NULL,
+	[Password] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[UserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[BusDetails] ADD  CONSTRAINT [DF_BusDetails_LeftSeats]  DEFAULT ((56)) FOR [LeftSeats]
+GO
+ALTER TABLE [dbo].[ApplicationObjectTypes]  WITH CHECK ADD  CONSTRAINT [FK_ApplicationObjectTypes_ApplicationObjects] FOREIGN KEY([ApplicationObjectId])
+REFERENCES [dbo].[ApplicationObjects] ([ApplicationObjectId])
+GO
+ALTER TABLE [dbo].[ApplicationObjectTypes] CHECK CONSTRAINT [FK_ApplicationObjectTypes_ApplicationObjects]
+GO
+ALTER TABLE [dbo].[BusAvailabilityDays]  WITH CHECK ADD  CONSTRAINT [FK_BusAvailabilityDays_BusAvailabilityDays] FOREIGN KEY([BusDetailId])
+REFERENCES [dbo].[BusDetails] ([BusDetailId])
+GO
+ALTER TABLE [dbo].[BusAvailabilityDays] CHECK CONSTRAINT [FK_BusAvailabilityDays_BusAvailabilityDays]
+GO
+ALTER TABLE [dbo].[BusAvailabilityDays]  WITH CHECK ADD  CONSTRAINT [FK_BusAvailabilityDays_BusAvailabilityDays1] FOREIGN KEY([BusAvailableId])
+REFERENCES [dbo].[BusAvailabilityDays] ([BusAvailableId])
+GO
+ALTER TABLE [dbo].[BusAvailabilityDays] CHECK CONSTRAINT [FK_BusAvailabilityDays_BusAvailabilityDays1]
+GO
+ALTER TABLE [dbo].[BusBookings]  WITH CHECK ADD  CONSTRAINT [FK_BusBookings_Offers] FOREIGN KEY([OfferId])
+REFERENCES [dbo].[Offers] ([OfferId])
+GO
+ALTER TABLE [dbo].[BusBookings] CHECK CONSTRAINT [FK_BusBookings_Offers]
+GO
+ALTER TABLE [dbo].[BusDetails]  WITH CHECK ADD  CONSTRAINT [FK_BusDetails_Buses] FOREIGN KEY([BusId])
+REFERENCES [dbo].[Buses] ([BusId])
+GO
+ALTER TABLE [dbo].[BusDetails] CHECK CONSTRAINT [FK_BusDetails_Buses]
+GO
+ALTER TABLE [dbo].[BusDetails]  WITH CHECK ADD  CONSTRAINT [FK_BusDetails_Reviews] FOREIGN KEY([ReviewId])
+REFERENCES [dbo].[Reviews] ([ReviewId])
+GO
+ALTER TABLE [dbo].[BusDetails] CHECK CONSTRAINT [FK_BusDetails_Reviews]
+GO
+ALTER TABLE [dbo].[CabBookings]  WITH CHECK ADD  CONSTRAINT [FK_CabBookings_Offers] FOREIGN KEY([OfferId])
+REFERENCES [dbo].[Offers] ([OfferId])
+GO
+ALTER TABLE [dbo].[CabBookings] CHECK CONSTRAINT [FK_CabBookings_Offers]
+GO
+ALTER TABLE [dbo].[CabDetails]  WITH CHECK ADD  CONSTRAINT [FK_CabDetails_Cabs] FOREIGN KEY([CabId])
+REFERENCES [dbo].[Cabs] ([CabId])
+GO
+ALTER TABLE [dbo].[CabDetails] CHECK CONSTRAINT [FK_CabDetails_Cabs]
+GO
+ALTER TABLE [dbo].[CabDetails]  WITH CHECK ADD  CONSTRAINT [FK_CabDetails_Reviews] FOREIGN KEY([ReviewId])
+REFERENCES [dbo].[Reviews] ([ReviewId])
+GO
+ALTER TABLE [dbo].[CabDetails] CHECK CONSTRAINT [FK_CabDetails_Reviews]
+GO
+ALTER TABLE [dbo].[Cabs]  WITH CHECK ADD  CONSTRAINT [FK_Cabs_ApplicationObjects] FOREIGN KEY([ApplicationObjectId])
+REFERENCES [dbo].[ApplicationObjects] ([ApplicationObjectId])
+GO
+ALTER TABLE [dbo].[Cabs] CHECK CONSTRAINT [FK_Cabs_ApplicationObjects]
+GO
+ALTER TABLE [dbo].[FlightAvailabilityDays]  WITH CHECK ADD  CONSTRAINT [FK_FlightAvailabilityDays_FlightDetails] FOREIGN KEY([FlightDetailId])
+REFERENCES [dbo].[FlightDetails] ([FlightDetailId])
+GO
+ALTER TABLE [dbo].[FlightAvailabilityDays] CHECK CONSTRAINT [FK_FlightAvailabilityDays_FlightDetails]
+GO
+ALTER TABLE [dbo].[FlightBookings]  WITH CHECK ADD  CONSTRAINT [FK_FlightBookings_Offers] FOREIGN KEY([OfferId])
+REFERENCES [dbo].[Offers] ([OfferId])
+GO
+ALTER TABLE [dbo].[FlightBookings] CHECK CONSTRAINT [FK_FlightBookings_Offers]
+GO
+ALTER TABLE [dbo].[FlightBookings]  WITH CHECK ADD  CONSTRAINT [FK_FlightBookings_Travellers] FOREIGN KEY([TravellerId])
+REFERENCES [dbo].[Travellers] ([TravellerId])
+GO
+ALTER TABLE [dbo].[FlightBookings] CHECK CONSTRAINT [FK_FlightBookings_Travellers]
+GO
+ALTER TABLE [dbo].[FlightDetails]  WITH CHECK ADD  CONSTRAINT [FK_FlightDetails_Flights] FOREIGN KEY([ReviewId])
+REFERENCES [dbo].[Reviews] ([ReviewId])
+GO
+ALTER TABLE [dbo].[FlightDetails] CHECK CONSTRAINT [FK_FlightDetails_Flights]
+GO
+ALTER TABLE [dbo].[Flights]  WITH CHECK ADD  CONSTRAINT [FK_Flights_ApplicationObjects] FOREIGN KEY([ApplicationObjectId])
+REFERENCES [dbo].[ApplicationObjects] ([ApplicationObjectId])
+GO
+ALTER TABLE [dbo].[Flights] CHECK CONSTRAINT [FK_Flights_ApplicationObjects]
+GO
+ALTER TABLE [dbo].[HotelBookings]  WITH CHECK ADD  CONSTRAINT [FK_HotelBookings_Offers] FOREIGN KEY([OfferId])
+REFERENCES [dbo].[Offers] ([OfferId])
+GO
+ALTER TABLE [dbo].[HotelBookings] CHECK CONSTRAINT [FK_HotelBookings_Offers]
+GO
+ALTER TABLE [dbo].[HotelDetails]  WITH CHECK ADD  CONSTRAINT [FK_HotelDetails_Hotels] FOREIGN KEY([HotelId])
+REFERENCES [dbo].[Hotels] ([HotelId])
+GO
+ALTER TABLE [dbo].[HotelDetails] CHECK CONSTRAINT [FK_HotelDetails_Hotels]
+GO
+ALTER TABLE [dbo].[HotelDetails]  WITH CHECK ADD  CONSTRAINT [FK_HotelDetails_Reviews] FOREIGN KEY([ReviewId])
+REFERENCES [dbo].[Reviews] ([ReviewId])
+GO
+ALTER TABLE [dbo].[HotelDetails] CHECK CONSTRAINT [FK_HotelDetails_Reviews]
+GO
+ALTER TABLE [dbo].[Hotels]  WITH CHECK ADD  CONSTRAINT [FK_Hotels_ApplicationObjects] FOREIGN KEY([ApplicationObjectId])
+REFERENCES [dbo].[ApplicationObjects] ([ApplicationObjectId])
+GO
+ALTER TABLE [dbo].[Hotels] CHECK CONSTRAINT [FK_Hotels_ApplicationObjects]
+GO
+ALTER TABLE [dbo].[Hotels]  WITH CHECK ADD  CONSTRAINT [FK_Hotels_Cities] FOREIGN KEY([CityId])
+REFERENCES [dbo].[Cities] ([CityId])
+GO
+ALTER TABLE [dbo].[Hotels] CHECK CONSTRAINT [FK_Hotels_Cities]
+GO
+ALTER TABLE [dbo].[Localities]  WITH CHECK ADD  CONSTRAINT [FK_Localities_Cities] FOREIGN KEY([CityId])
+REFERENCES [dbo].[Cities] ([CityId])
+GO
+ALTER TABLE [dbo].[Localities] CHECK CONSTRAINT [FK_Localities_Cities]
+GO
+ALTER TABLE [dbo].[Localities]  WITH CHECK ADD  CONSTRAINT [FK_Localities_Hotels] FOREIGN KEY([HotelId])
+REFERENCES [dbo].[Hotels] ([HotelId])
+GO
+ALTER TABLE [dbo].[Localities] CHECK CONSTRAINT [FK_Localities_Hotels]
+GO
+ALTER TABLE [dbo].[Reviews]  WITH CHECK ADD  CONSTRAINT [FK_Reviews_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([UserId])
+GO
+ALTER TABLE [dbo].[Reviews] CHECK CONSTRAINT [FK_Reviews_Users]
+GO
+ALTER TABLE [dbo].[Rooms]  WITH CHECK ADD  CONSTRAINT [FK_Rooms_Rooms] FOREIGN KEY([HotelDetailId])
+REFERENCES [dbo].[HotelDetails] ([HotelDetailId])
+GO
+ALTER TABLE [dbo].[Rooms] CHECK CONSTRAINT [FK_Rooms_Rooms]
+GO
+ALTER TABLE [dbo].[TrainAvailabilityDays]  WITH CHECK ADD  CONSTRAINT [FK_TrainAvailabilityDays_TrainDetails] FOREIGN KEY([TrainDetailId])
+REFERENCES [dbo].[TrainDetails] ([TrainDetailId])
+GO
+ALTER TABLE [dbo].[TrainAvailabilityDays] CHECK CONSTRAINT [FK_TrainAvailabilityDays_TrainDetails]
+GO
+ALTER TABLE [dbo].[TrainBookings]  WITH CHECK ADD  CONSTRAINT [FK_TrainBookings_Offers] FOREIGN KEY([OfferId])
+REFERENCES [dbo].[Offers] ([OfferId])
+GO
+ALTER TABLE [dbo].[TrainBookings] CHECK CONSTRAINT [FK_TrainBookings_Offers]
+GO
+ALTER TABLE [dbo].[TrainDetails]  WITH CHECK ADD  CONSTRAINT [FK_TrainDetails_Trains] FOREIGN KEY([TrainId])
+REFERENCES [dbo].[Trains] ([TrainId])
+GO
+ALTER TABLE [dbo].[TrainDetails] CHECK CONSTRAINT [FK_TrainDetails_Trains]
+GO
+ALTER TABLE [dbo].[Travellers]  WITH CHECK ADD  CONSTRAINT [FK_Travellers_Travellers] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([UserId])
+GO
+ALTER TABLE [dbo].[Travellers] CHECK CONSTRAINT [FK_Travellers_Travellers]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "BusAvailabilityDays"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 119
+               Right = 208
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "BusDetails"
+            Begin Extent = 
+               Top = 6
+               Left = 246
+               Bottom = 136
+               Right = 416
+            End
+            DisplayFlags = 280
+            TopColumn = 4
+         End
+         Begin Table = "Buses"
+            Begin Extent = 
+               Top = 6
+               Left = 454
+               Bottom = 102
+               Right = 624
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vBusDetails'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vBusDetails'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "FlightDetails"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 136
+               Right = 208
+            End
+            DisplayFlags = 280
+            TopColumn = 3
+         End
+         Begin Table = "FlightAvailabilityDays"
+            Begin Extent = 
+               Top = 6
+               Left = 246
+               Bottom = 119
+               Right = 423
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "Flights"
+            Begin Extent = 
+               Top = 6
+               Left = 461
+               Bottom = 119
+               Right = 656
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "ApplicationObjectTypes"
+            Begin Extent = 
+               Top = 6
+               Left = 694
+               Bottom = 119
+               Right = 936
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vFlightDetails'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vFlightDetails'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "TrainAvailabilityDays"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 119
+               Right = 211
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "TrainDetails"
+            Begin Extent = 
+               Top = 6
+               Left = 249
+               Bottom = 136
+               Right = 419
+            End
+            DisplayFlags = 280
+            TopColumn = 4
+         End
+         Begin Table = "Trains"
+            Begin Extent = 
+               Top = 6
+               Left = 457
+               Bottom = 102
+               Right = 627
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vTrainDetails'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vTrainDetails'
+GO
