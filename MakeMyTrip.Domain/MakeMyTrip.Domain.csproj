@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\MakeMyTrip.BoundedContext\MakeMyTrip.BoundedContext.csproj" />
+    <ProjectReference Include="..\MakeMyTrip.UnitOfWork\MakeMyTrip.UnitOfWork.csproj" />
+    <ProjectReference Include="..\MakeMyTrip.Models\MakeMyTrip.Models.csproj" />
+    <ProjectReference Include="..\MakeMyTrip.Infrastructure\MakeMyTrip.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+</Project>
